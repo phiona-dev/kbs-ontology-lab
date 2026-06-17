@@ -143,7 +143,7 @@ def can_take_course(student_name, course_code):
 
 if __name__ == "__main__":
     print("=== University Ontology Database ===")
-    print("Available students in system: Mary, Brian, Linda, John, Alice\n")
+    print("Available students in system: Alice, Bob, Charlie, David, Eve\n")
     
     while True:
         # 1. Get student name from user
