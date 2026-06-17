@@ -14,7 +14,7 @@ class Lecturer:
         self.department = department
 
     def __str__(self):
-        return f"Lecturer(name={self.name}, lecturer_id={self.lecturer_id}, department={self.department}"
+        return f"Lecturer(name={self.name}, lecturer_id={self.lecturer_id}, department={self.department})"
     
     
 class Course:
@@ -32,7 +32,7 @@ class Department:
         self.head = head
 
     def __str__(self):
-        return f"Department(name={self.name}, head={self.head}"
+        return f"Department(name={self.name}, head={self.head})"
 
 class Classroom:
     def __init__(self, room_number, capacity=30):
@@ -43,7 +43,7 @@ class Classroom:
         return f"Classroom(room_number={self.room_number}, capacity={self.capacity})"
     
     
-#Ontology Objects
+# Ontology Objects
 dept_cs = Department(name="Computer Science", head="Dr. Otieno")
 dept_is = Department(name="Information Systems", head="Dr. Mwangi")
 
@@ -91,6 +91,7 @@ department_courses = {
 }
 
 course_prerequisites = {
+    "APT2010": [],
     "APT2020": ["APT2010"],
     "APT2030": ["APT2010"],
     "APT2040": ["APT2010", "APT2020"],
@@ -131,7 +132,6 @@ def get_students_in_course(course_code):
 
 def can_take_course(student_name, course_code):
     """Checks if a student can take a course based on prerequisites."""
-    # Check if the course exists in our ontology records first
     if course_code not in course_prerequisites:
         return f"No. Course '{course_code}' does not exist in the database."
         
@@ -141,7 +141,6 @@ def can_take_course(student_name, course_code):
         
     student_obj = students_db.get(student_name)
     if student_obj:
-        # Find which prerequisites are missing
         missing = [p for p in prerequisites if p not in student_obj.completed_courses]
         
         if not missing:
@@ -157,22 +156,18 @@ if __name__ == "__main__":
     print("Available students in system: Alice, Bob, Charlie, David, Eve\n")
     
     while True:
-        # 1. Get student name from user
         student_name = input("Enter a student's name (or type 'exit' to quit): ").strip()
         
-        # Check if the user wants to leave the program
         if student_name.lower() == 'exit':
             print("Exiting program. Goodbye!")
             break
             
-        # Check if the student actually exists in our database
         if student_name not in students_db:
             print(f"Error: Student '{student_name}' not found. Please try again.\n")
             continue
             
         print("-" * 40)
         
-        # Output 1: Courses taken by the entered student
         print(f"Courses taken by {student_name}:")
         courses = get_student_courses(student_name)
         if courses:
@@ -182,7 +177,6 @@ if __name__ == "__main__":
             print("- None (Not enrolled in any courses)")
         print()
 
-        # Output 2 & 4: Find lecturer and other classmates for their first course (if they have one)
         if courses:
             primary_course = courses[0]
             print(f"Lecturer teaching {primary_course}:")
@@ -196,10 +190,9 @@ if __name__ == "__main__":
         else:
             print("No course enrollment data to display for lecturer/classmate lookups.\n")
 
-        # Output 5: Dynamic Prerequisite Check
         target_course = input(f"What course does {student_name} want to take next? (e.g., APT4040): ").strip()
         print(f"Can {student_name} take {target_course}?")
         print(can_take_course(student_name, target_course))
         
         print("-" * 40)
-        print()  # Blank line for spacing before the next loop    
+        print()
