@@ -14,7 +14,7 @@ class Lecturer:
         self.department = department
 
     def __str__(self):
-        return f"Lecturer(name={self.name}, lecturer_id={self.lecturer_id}, department={self.department}, courses={self.courses})"
+        return f"Lecturer(name={self.name}, lecturer_id={self.lecturer_id}, department={self.department}"
     
     
 class Course:
@@ -32,7 +32,7 @@ class Department:
         self.head = head
 
     def __str__(self):
-        return f"Department(name={self.name}, head={self.head}, courses={self.courses})"
+        return f"Department(name={self.name}, head={self.head}"
 
 class Classroom:
     def __init__(self, room_number, capacity=30):
@@ -131,14 +131,25 @@ def get_students_in_course(course_code):
 
 def can_take_course(student_name, course_code):
     """Checks if a student can take a course based on prerequisites."""
+    # Check if the course exists in our ontology records first
+    if course_code not in course_prerequisites:
+        return f"No. Course '{course_code}' does not exist in the database."
+        
     prerequisites = course_prerequisites.get(course_code)
     if not prerequisites:
         return "Yes."
+        
     student_obj = students_db.get(student_name)
-    if student_obj and prerequisites in student_obj.completed_courses:
-        return "Yes."
-    else:
-        return f"No.\n Missing prerequisite: {prerequisites}."
+    if student_obj:
+        # Find which prerequisites are missing
+        missing = [p for p in prerequisites if p not in student_obj.completed_courses]
+        
+        if not missing:
+            return "Yes."
+        else:
+            return f"No.\n Missing prerequisite: {', '.join(missing)}."
+            
+    return "No. Student record not found."
     
 
 if __name__ == "__main__":
